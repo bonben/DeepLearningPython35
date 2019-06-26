@@ -15,14 +15,28 @@
         dobrzanski.michal.daniel@gmail.com
 """
 
+from PIL import Image
+
+
+def show_img(char_np_array):
+    char_np_array = char_np_array.reshape(28, 28)
+    char_img = Image.fromarray((char_np_array * 255))
+    char_img.show()
+
+
 # ----------------------
 # - read the input data:
 import mnist_loader
+
 training_data, validation_data, test_data = mnist_loader.load_data_wrapper()
 training_data = list(training_data)
+
+show_img(training_data[0][0])
+
+
 # ---------------------
 # - network.py example:
-#import network
+# import network
 
 '''
 net = network.Network([784, 30, 10])
@@ -31,7 +45,7 @@ net.SGD(training_data, 30, 10, 3.0, test_data=test_data)
 
 # ----------------------
 # - network2.py example:
-#import network2
+# import network2
 
 '''
 net = network2.Network([784, 30, 10], cost=network2.CrossEntropyCost)
@@ -84,7 +98,6 @@ net.SGD(training_data, 30, 10, 0.1,
     monitor_evaluation_accuracy=True)
 '''
 
-
 # ----------------------
 # Theano and CUDA
 # ----------------------
@@ -122,6 +135,8 @@ net.SGD(training_data, 30, 10, 0.1,
 
 
 """
+
+
 def testTheano():
     from theano import function, config, shared, tensor
     import numpy
@@ -146,14 +161,16 @@ def testTheano():
         print('Used the cpu')
     else:
         print('Used the gpu')
+
+
 # Perform check:
 testTheano()
-
 
 # ----------------------
 # - network3.py example:
 import network3
-from network3 import Network, ConvPoolLayer, FullyConnectedLayer, SoftmaxLayer # softmax plus log-likelihood cost is more common in modern image classification networks.
+from network3 import Network, ConvPoolLayer, FullyConnectedLayer, \
+    SoftmaxLayer  # softmax plus log-likelihood cost is more common in modern image classification networks.
 
 # read data:
 '''
@@ -196,8 +213,8 @@ net.SGD(training_data, 60, mini_batch_size, 0.1, validation_data, test_data)
 '''
 
 # chapter 6 -  rectified linear units and some l2 regularization (lmbda=0.1) => even better accuracy
-from network3 import ReLU
 '''
+from network3 import ReLU
 net = Network([
     ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28),
                   filter_shape=(20, 1, 5, 5),
